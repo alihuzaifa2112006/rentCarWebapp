@@ -1,26 +1,372 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Hide all scrollbars globally but allow scrolling */
+html,
+body {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  margin: 0;
+  padding: 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Hide scrollbar for landing intro but allow scrolling */
+.landing-intro {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+.landing-intro::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+}
+
+
+/* Cario heading – joining stylish script / writing font */
+.font-cario-heading {
+  font-family: var(--font-cario-heading), cursive;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Logo – box shadow + fast 3D hover */
+.logo-3d-wrap {
+  perspective: 500px;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.logo-3d-wrap img {
+  transition: transform 0.15s ease;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+}
+
+.logo-3d-wrap:hover img {
+  transform: rotateY(18deg);
+}
+
+/* Car – logo jaisa 3D hover (hover pe rotateY), image pe transform ab conflict nahi */
+.car-3d-wrap {
+  perspective: 600px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.car-3d-wrap img {
+  transition: transform 0.2s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.car-3d-wrap:hover img {
+  transform: rotateY(18deg);
+}
+
+/* Nav links – hover pe maroon + traveling bottom border */
+.navLink {
+  position: relative;
+  color: #374151;
+  text-decoration: none;
+  padding-bottom: 4px;
+  transition: color 0.25s ease;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: #922b2b;
+  transition: width 0.25s ease;
+}
+
+.navLink:hover {
+  color: #922b2b;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* Profile dropdown – by default bilkul hidden, sirf icon dikhe; click pe open */
+.profile-dropdown-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.profileDialog {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  padding: 8px 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.96);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+}
+
+.profileDialog--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  display: flex;
+}
+
+.profileDialog a {
+  display: block;
+  padding: 10px 16px;
+  color: #374151;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.15s;
+}
+
+.profileDialog a:hover {
+  background: #f3f4f6;
+}
+
+.profileDialog a:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.profileDialog a:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+/* Landing page – full height, centered */
+.landing {
+  min-height: 100vh;
+}
+
+.landing-cta {
+  transition: transform 0.2s ease;
+}
+
+.landing-cta:hover {
+  transform: translateY(-2px);
+}
+
+/* Left side button – diagonal maroon color (page diagonal design jaisa) */
+.diagonal-maroon-btn {
+  position: relative;
+  background: linear-gradient(135deg, #922b2b 0%, #922b2b 48%, #7a2323 52%, #7a2323 100%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.diagonal-maroon-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 45%, rgba(255, 255, 255, 0.08) 50%, transparent 55%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.diagonal-maroon-btn:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Landing intro – diagonal split display: left maroon, right white */
+.landing-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.landing-split-left {
+  clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%);
+}
+
+.landing-split-right {
+  clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
+}
+
+/* Right side – gradient + thora color, screen complete */
+.landing-right-bg {
+  background: linear-gradient(165deg, rgba(146, 43, 43, 0.06) 0%, rgba(255, 255, 255, 1) 25%, #fafafa 50%, #f5f5f4 100%);
+}
+
+.landing-right-deco::before,
+.landing-right-deco::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+}
+
+.landing-right-deco::before {
+  width: 320px;
+  height: 320px;
+  background: rgba(146, 43, 43, 0.12);
+  top: 15%;
+  right: 10%;
+}
+
+.landing-right-deco::after {
+  width: 240px;
+  height: 240px;
+  background: rgba(146, 43, 43, 0.08);
+  bottom: 20%;
+  right: 25%;
+}
+
+.landing-left {
+  padding: 2rem;
+}
+
+.landing-right {
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .landing-split {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .landing-left {
+    min-height: 45vh;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .landing-right {
+    min-height: 55vh;
+    padding-top: 1rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Car – entry animation wrapper pe (taake image pe hover kaam kare) */
+@keyframes landingCarMove {
+  0% {
+    transform: translate(-100vw, -100vh);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.landing-car-wrap {
+  overflow: visible;
+  width: 100%;
+}
+
+.landing-car-entry {
+  animation: landingCarMove 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Car – continuous motion (aage peeche float), display screen pe hamesha chalty rahe */
+@keyframes carFloat {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(24px, -22px);
+  }
+
+  50% {
+    transform: translate(0, 0);
+  }
+
+  75% {
+    transform: translate(-24px, -22px);
+  }
+}
+
+.landing-car-float {
+  animation: carFloat 2.8s ease-in-out 1s infinite;
+  will-change: transform;
+}
+
+/* Landing CTA button – acha UI (ab sirf left side Explore Fleet use) */
+.landing-cta-btn {
+  box-shadow: 0 4px 20px rgba(146, 43, 43, 0.4);
+}
+
+.landing-cta-btn:hover {
+  box-shadow: 0 8px 28px rgba(146, 43, 43, 0.5);
+  transform: translateY(-2px);
+}
+
+.landing-cta-arrow {
+  display: inline-flex;
+}
+
+/* Customer Feedback – fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Customer Feedback Card – glassmorphism effect */
+.feedback-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feedback-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(146, 43, 43, 0.15);
+}
+
+/* Custom Scrollbar for Dropdown */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #922b2b;
 }
