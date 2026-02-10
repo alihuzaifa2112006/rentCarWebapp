@@ -3,12 +3,13 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
-export default function Home() {
+export default function Home({ onSearchByCity }) {
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCity, setSelectedCity] = useState(null);
+    const [showSelectCityMsg, setShowSelectCityMsg] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -153,8 +154,8 @@ export default function Home() {
                                     <h3 className="text-lg font-bold text-gray-900 whitespace-nowrap">Select Location</h3>
                                 </div>
 
-                                {/* Custom Searchable Dropdown */}
-                                <div className="relative w-full">
+                                {/* Custom Searchable Dropdown - location-dropdown-container so click-outside doesn't close before select */}
+                                <div className="location-dropdown-container relative w-full">
                                     <div
                                         className={`w-full px-5 py-3 bg-gray-50 border ${isOpen ? 'border-[#922b2b] ring-2 ring-[#922b2b]/20' : 'border-gray-200'} rounded-xl text-gray-700 text-base flex items-center justify-between cursor-pointer transition-all hover:bg-white`}
                                         onClick={() => !loading && setIsOpen(!isOpen)}
@@ -177,7 +178,7 @@ export default function Home() {
                                                         type="text"
                                                         placeholder="Search city..."
                                                         className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm focus:outline-none focus:border-[#922b2b] transition-all"
-                                                        value={searchTerm}
+                                                        value={searchTerm ?? ""}
                                                         onChange={(e) => setSearchTerm(e.target.value)}
                                                         onClick={(e) => e.stopPropagation()}
                                                         autoFocus
@@ -188,38 +189,46 @@ export default function Home() {
                                                 </div>
                                             </div>
 
-                                            {/* Cities List */}
+                                            {/* Cities List - All option first, then cities */}
                                             <div className="max-h-[280px] overflow-y-auto custom-scrollbar">
-                                                {cities.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase())).length > 0 ? (
-                                                    cities
-                                                        .filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                                        .map((city) => (
-                                                            <div
-                                                                key={city._id}
-                                                                className="px-5 py-3 hover:bg-[#922b2b]/5 cursor-pointer flex items-center justify-between group transition-colors"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    setSelectedCity(city);
-                                                                    setIsOpen(false);
-                                                                    setSearchTerm('');
-                                                                }}
-                                                            >
-                                                                <div className="flex flex-col">
-                                                                    <span className="text-gray-900 font-medium group-hover:text-[#922b2b] transition-colors">{city.name}</span>
-                                                                    <span className="text-xs text-gray-400">{city.province || 'Pakistan'}</span>
-                                                                </div>
-                                                                {selectedCity?._id === city._id && (
-                                                                    <svg className="w-5 h-5 text-[#922b2b]" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                )}
+                                                {(() => {
+                                                    const ALL_OPTION = { _id: 'all', name: 'All', province: 'All cities' };
+                                                    const filtered = cities.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+                                                    const showAll = !searchTerm.trim() || 'all'.includes(searchTerm.toLowerCase());
+                                                    const list = showAll ? [ALL_OPTION, ...filtered] : filtered;
+                                                    if (list.length === 0) {
+                                                        return (
+                                                            <div className="px-5 py-8 text-center text-gray-400 text-sm">
+                                                                No cities found
                                                             </div>
-                                                        ))
-                                                ) : (
-                                                    <div className="px-5 py-8 text-center text-gray-400 text-sm">
-                                                        No cities found
-                                                    </div>
-                                                )}
+                                                        );
+                                                    }
+                                                    return list.map((city) => (
+                                                        <div
+                                                            key={city._id}
+                                                            role="option"
+                                                            aria-selected={selectedCity?._id === city._id}
+                                                            className="px-5 py-3 hover:bg-[#922b2b]/5 cursor-pointer flex items-center justify-between group transition-colors active:bg-[#922b2b]/10"
+                                                            onMouseDown={(e) => e.preventDefault()}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setSelectedCity(city);
+                                                                setIsOpen(false);
+                                                                setSearchTerm('');
+                                                            }}
+                                                        >
+                                                            <div className="flex flex-col">
+                                                                <span className="text-gray-900 font-medium group-hover:text-[#922b2b] transition-colors">{city.name}</span>
+                                                                <span className="text-xs text-gray-400">{city.province || 'Pakistan'}</span>
+                                                            </div>
+                                                            {selectedCity?._id === city._id && (
+                                                                <svg className="w-5 h-5 text-[#922b2b]" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                </svg>
+                                                            )}
+                                                        </div>
+                                                    ));
+                                                })()}
                                             </div>
                                         </div>
                                     )}
@@ -227,10 +236,25 @@ export default function Home() {
 
                                 {/* Search Button */}
                                 <div className="shrink-0 w-full md:w-auto">
-                                    <button className="w-full md:w-auto bg-[#922b2b] hover:bg-[#7a2323] text-white font-bold px-8 py-3 rounded-xl shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (selectedCity?.name) {
+                                                setShowSelectCityMsg(false);
+                                                onSearchByCity?.(selectedCity._id === 'all' ? '' : selectedCity.name);
+                                            } else {
+                                                setShowSelectCityMsg(true);
+                                                setTimeout(() => setShowSelectCityMsg(false), 3000);
+                                            }
+                                        }}
+                                        className="w-full md:w-auto bg-[#922b2b] hover:bg-[#7a2323] text-white font-bold px-8 py-3 rounded-xl shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
+                                    >
                                         Search Cars
                                     </button>
                                 </div>
+                                {showSelectCityMsg && (
+                                    <p className="text-sm text-[#922b2b] font-medium mt-2 md:mt-0">Please select a city first.</p>
+                                )}
 
                             </div>
                         </div>

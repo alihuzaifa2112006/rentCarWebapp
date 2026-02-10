@@ -111,9 +111,14 @@ export default function About() {
                         Our goal was to create a seamless interface that bridges the gap between luxury and accessibility.
                     </p>
                     <div className="flex justify-center gap-4">
-                        <button className="bg-[#922b2b] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-[#922b2b]/20 hover:scale-105 transition-all">
+                        <a
+                            href="https://wa.me/923178386880"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-[#922b2b] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-[#922b2b]/20 hover:scale-105 transition-all inline-block"
+                        >
                             Contact Developer
-                        </button>
+                        </a>
                     </div>
                 </div>
             </section>

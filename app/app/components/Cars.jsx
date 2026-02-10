@@ -29,7 +29,8 @@ export default function Cars({ filters }) {
                     limit,
                     search: filters?.search || '',
                     maxPrice: filters?.maxPrice || 1000,
-                    seats: filters?.seats?.join(',') || ''
+                    seats: filters?.seats?.join(',') || '',
+                    city: filters?.city || ''
                 });
 
                 const response = await fetch(`/api/cars?${queryParams.toString()}`);
@@ -87,13 +88,18 @@ export default function Cars({ filters }) {
                 {cars.map((car) => (
                     <CarBox
                         key={car._id}
+                        id={car._id}
                         name={car.name}
                         fuel={car.fuel}
+                        capacity={car.capacity}
                         manual_or_auto={car.manual_or_auto}
                         seating_capacity={car.seating_capacity}
                         price_per_day={car.price_per_day}
+                        city={car.city}
+                        province={car.province}
                         image={car.image}
                         description={car.description}
+                        details={car.details}
                     />
                 ))}
 

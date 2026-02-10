@@ -31,12 +31,18 @@ const Navbar = () => {
                 <div className="navLinks flex items-center gap-6">
                     <Link href="/app" className="navLink">Home</Link>
                     <Link href="/about" className="navLink">About</Link>
-                    <Link href="/app" className="navLink">Cars/Fleet</Link>
+                 
                     <Link href="/process" className="navLink">How Its Works?</Link>
                     <Link href="/contact" className="navLink">Contact</Link>
                     <Link href="/booking" className="bg-[#922b2b] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#7a2323] transition-all shadow-lg shadow-[#922b2b]/20 text-sm">Book Now</Link>
-
-                    <div className="profile-dropdown-wrap relative" ref={profileRef}>
+                    <Link href="/favorites" className="navLink flex items-center gap-1.5">Favorites</Link>
+                    <Link href="/my-bookings" className="navLink flex items-center gap-1.5" title="My Bookings">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        My Bookings
+                    </Link>
+                    {/* <div className="profile-dropdown-wrap relative" ref={profileRef}>
                         <button
                             type="button"
                             onClick={() => setProfileOpen((o) => !o)}
@@ -51,7 +57,7 @@ const Navbar = () => {
                             <Link href="/profile" onClick={() => setProfileOpen(false)}>Profile</Link>
                             <Link href="/settings" onClick={() => setProfileOpen(false)}>Settings</Link>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

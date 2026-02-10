@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function Sidebar({ onFilterChange }) {
+export default function Sidebar({ onFilterChange, onClearAll }) {
     const [search, setSearch] = useState('');
     const [seats, setSeats] = useState([]);
     const [maxPrice, setMaxPrice] = useState(50000); // Higher default for PKR
@@ -31,7 +31,7 @@ export default function Sidebar({ onFilterChange }) {
                     <input
                         type="text"
                         placeholder="Search for cars..."
-                        value={search}
+                        value={search ?? ""}
                         onChange={(e) => setSearch(e.target.value)}
                         className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#922b2b] focus:border-transparent transition-all placeholder:text-gray-400"
                     />
@@ -80,7 +80,7 @@ export default function Sidebar({ onFilterChange }) {
                             min="1000"
                             max="50000"
                             step="500"
-                            value={maxPrice}
+                            value={maxPrice ?? 50000}
                             onChange={(e) => setMaxPrice(parseInt(e.target.value))}
                             className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#922b2b]"
                         />
@@ -94,7 +94,12 @@ export default function Sidebar({ onFilterChange }) {
 
             {/* Clear Filters Button */}
             <button
-                onClick={() => { setSearch(''); setSeats([]); setMaxPrice(50000); }}
+                onClick={() => {
+                    setSearch('');
+                    setSeats([]);
+                    setMaxPrice(50000);
+                    onClearAll?.();
+                }}
                 className="w-full mt-10 py-3 text-xs font-bold text-gray-400 hover:text-[#922b2b] transition-colors border border-dashed border-gray-200 rounded-xl hover:border-[#922b2b]/30"
             >
                 CLEAR ALL FILTERS

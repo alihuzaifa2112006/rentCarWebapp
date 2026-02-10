@@ -15,6 +15,7 @@ export async function GET(request) {
 
         // Filtering logic
         const search = searchParams.get("search") || "";
+        const city = searchParams.get("city") || "";
         const maxPrice = parseInt(searchParams.get("maxPrice")) || 100000;
         const seatsStr = searchParams.get("seats");
         const seats = seatsStr ? seatsStr.split(",").map(Number) : [];
@@ -26,12 +27,17 @@ export async function GET(request) {
             query.name = { $regex: search, $options: "i" };
         }
 
-        // 2. Filter by max price
+        // 2. Filter by city (exact match, case-insensitive)
+        if (city.trim()) {
+            query.city = { $regex: new RegExp(`^${city.trim()}$`, "i") };
+        }
+
+        // 3. Filter by max price
         if (maxPrice) {
             query.price_per_day = { $lte: maxPrice };
         }
 
-        // 3. Filter by seating capacity
+        // 4. Filter by seating capacity
         if (seats.length > 0) {
             query.seating_capacity = { $in: seats };
         }

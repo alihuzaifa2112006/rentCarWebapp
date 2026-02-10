@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono, Great_Vibes } from "next/font/google";
 import "./globals.css";
+import { FavoritesProvider } from "./context/FavoritesContext";
+import { BookingsProvider } from "./context/BookingsContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +30,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${greatVibes.variable} antialiased`}
       >
-        {children}
+        <FavoritesProvider>
+          <BookingsProvider>
+            {children}
+          </BookingsProvider>
+        </FavoritesProvider>
       </body>
     </html>
   );
